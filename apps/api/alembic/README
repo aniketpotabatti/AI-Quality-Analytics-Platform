@@ -1,0 +1,16 @@
+# Alembic migrations
+
+Managed schema history for Hallucination Analytics Studio.
+
+```bash
+# Apply all pending migrations
+uv run alembic upgrade head
+
+# Create a new revision after model changes
+uv run alembic revision --autogenerate -m "describe change"
+
+# Roll back one revision
+uv run alembic downgrade -1
+```
+
+From the monorepo root: `make migrate`.
