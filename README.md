@@ -1,4 +1,4 @@
-# Hallucination Analytics Studio
+# AI Quality Analytics Platform
 
 A production-grade platform for evaluating LLM outputs against hallucination, faithfulness, and grounding metrics. Built as a portfolio project with SaaS-shaped architecture: modular monolith, domain-driven design, and a pluggable evaluation engine.
 
@@ -6,7 +6,7 @@ A production-grade platform for evaluating LLM outputs against hallucination, fa
 
 ## Vision
 
-Teams use Hallucination Analytics Studio to:
+Teams use AI Quality Analytics Platform to:
 
 - **Ingest** datasets of prompts, responses, context, and ground truth
 - **Run** batch evaluations with configurable metrics and detectors
