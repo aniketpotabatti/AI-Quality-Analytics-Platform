@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from has_api.infrastructure.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+from has_api.infrastructure.database.types import GUID
 
 if TYPE_CHECKING:
     from has_api.infrastructure.database.models.datasets import DatasetModel
@@ -40,13 +40,13 @@ class WorkspaceMemberModel(Base, UUIDPrimaryKeyMixin):
     __table_args__ = (UniqueConstraint("workspace_id", "user_id", name="uq_workspace_member"),)
 
     workspace_id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
+        GUID,
         ForeignKey("workspaces.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     user_id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
+        GUID,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -62,7 +62,7 @@ class ApiKeyModel(Base, UUIDPrimaryKeyMixin):
     __tablename__ = "api_keys"
 
     workspace_id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
+        GUID,
         ForeignKey("workspaces.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -71,7 +71,7 @@ class ApiKeyModel(Base, UUIDPrimaryKeyMixin):
     key_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     key_prefix: Mapped[str] = mapped_column(String(16), nullable=False, index=True)
     created_by_id: Mapped[UUID | None] = mapped_column(
-        PG_UUID(as_uuid=True),
+        GUID,
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
     )

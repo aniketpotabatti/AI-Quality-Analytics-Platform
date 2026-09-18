@@ -13,13 +13,17 @@ dependencies = [
     "alembic>=1.14.0",
     "pydantic>=2.10.0",
     "pydantic-settings>=2.6.0",
+    "email-validator>=2.2.0",
     "python-jose[cryptography]>=3.3.0",
-    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.1.0",
     "python-multipart>=0.0.17",
     "arq>=0.26.0",
     "redis>=5.2.0",
     "structlog>=24.4.0",
     "httpx>=0.28.0",
+    # SQLite fallback for zero-dependency local dev (no Postgres needed).
+    # Postgres deployments still use asyncpg.
+    "aiosqlite>=0.20.0",
 ]
 
 [project.optional-dependencies]

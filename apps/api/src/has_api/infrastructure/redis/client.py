@@ -1,4 +1,12 @@
-"""Redis connection pool for caching and job queue."""
+"""Redis connection pool for caching and job queue.
+
+Redis is OPTIONAL for local development: auth/register/login work without it.
+If Redis is unreachable, ``get_redis`` raises on first real command (callers
+handle it), and ``get_arq_pool`` raises only when a job is enqueued (the
+evaluations router already treats that as fire-and-forget).
+"""
+
+from contextlib import suppress
 
 from redis.asyncio import Redis
 
@@ -24,15 +32,20 @@ async def get_arq_pool():
         from arq.connections import RedisSettings
 
         settings = get_settings()
-        _arq_pool = await create_pool(RedisSettings.from_dsn(str(settings.redis_url)))
+        _arq_pool = await create_pool(
+            RedisSettings.from_dsn(str(settings.redis_url)),
+            timeout=2,  # fail fast when Redis is not running locally
+        )
     return _arq_pool
 
 
 async def close_redis() -> None:
     global _redis, _arq_pool
     if _redis is not None:
-        await _redis.aclose()
+        with suppress(Exception):
+            await _redis.aclose()
         _redis = None
     if _arq_pool is not None:
-        await _arq_pool.aclose()
+        with suppress(Exception):
+            await _arq_pool.aclose()
         _arq_pool = None

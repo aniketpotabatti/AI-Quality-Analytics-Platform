@@ -30,6 +30,14 @@ logger = structlog.get_logger()
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     logger.info("starting_api", env=settings.app_env, version=__version__)
+    # Ensure tables exist. On Postgres with Alembic this is a no-op
+    # (checkfirst); on SQLite local-dev it creates the schema.
+    try:
+        from has_api.infrastructure.database import init_db
+
+        await init_db()
+    except Exception as exc:  # pragma: no cover - startup resilience
+        logger.warning("db_init_failed", error=str(exc))
     yield
     await close_redis()
     logger.info("stopped_api")
